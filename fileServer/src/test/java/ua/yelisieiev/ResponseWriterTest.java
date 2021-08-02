@@ -36,6 +36,6 @@ class ResponseWriterTest {
         ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
         BufferedOutputStream outputStream = new BufferedOutputStream(byteOut);
         ResponseWriter.writeErrorResponse(outputStream, HttpStatus.NOT_FOUND);
-        assertEquals("HTTP/1.1 404 Not found\r\n", byteOut.toString());
+        assertEquals("HTTP/1.1 404 Not found\r\n\r\n", byteOut.toString());
     }
 }

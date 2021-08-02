@@ -30,18 +30,18 @@ public class FileServerTest {
         stopServer();
     }
 
-    @DisplayName("Start wait 5 mins and stop")
-    @Test
-    public void test_startWaitStop() throws InterruptedException, IOException {
-        try {
-            createTestFile("test2.txt", "somesomesome");
-            startServer();
-            Thread.sleep(300_000);
-            stopServer();
-        } finally {
-            removeTestFile("test2.txt");
-        }
-    }
+//    @DisplayName("Start wait 5 mins and stop")
+//    @Test
+//    public void test_startWaitStop() throws InterruptedException, IOException {
+//        try {
+//            createTestFile("test2.txt", "somesomesome");
+//            startServer();
+//            Thread.sleep(300_000);
+//            stopServer();
+//        } finally {
+//            removeTestFile("test2.txt");
+//        }
+//    }
 
     @DisplayName("On running server request existing resource and receive it")
     @Test

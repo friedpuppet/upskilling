@@ -50,7 +50,7 @@ public class FileServer {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             serverSocket.setSoTimeout(5000);
             started = true;
-            serverLog("started");
+            serverLog("started on port " + port + " and directory " + contentPath);
 
             while (!mustStop) {
                 try (Socket socket = serverSocket.accept();
