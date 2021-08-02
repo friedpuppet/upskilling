@@ -22,13 +22,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class FileServerTest {
     FileServer server = new FileServer();
 
-    @DisplayName("Start and stop")
-    @Test
-    public void test_startStop() throws InterruptedException {
-        startServer();
-        Thread.sleep(2000);
-        stopServer();
-    }
+//    @DisplayName("Start and stop")
+//    @Test
+//    public void test_startStop() throws InterruptedException {
+//        startServer();
+//        Thread.sleep(2000);
+//        stopServer();
+//    }
 
 //    @DisplayName("Start wait 5 mins and stop")
 //    @Test

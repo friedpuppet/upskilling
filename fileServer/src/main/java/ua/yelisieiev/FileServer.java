@@ -16,7 +16,7 @@ public class FileServer {
     private String contentPath;
     private boolean started;
     private boolean mustStop;
-
+    private Thread thread;
 
     public boolean isStarted() {
         return started;
@@ -41,8 +41,10 @@ public class FileServer {
 
     public void start() {
         checkNotStarted();
-        Runnable mainThread = this::handleRequests;
-        new Thread(mainThread).start();
+//        Runnable mainThread = this::handleRequests;
+        thread = new Thread(this::handleRequests);
+//        thread.setDaemon(true);
+        thread.start();
     }
 
 
@@ -57,11 +59,12 @@ public class FileServer {
                      BufferedInputStream inputStream = new BufferedInputStream(socket.getInputStream());
                      BufferedOutputStream outputStream = new BufferedOutputStream(socket.getOutputStream())) {
                     RequestHandler requestHandler = new RequestHandler(inputStream, outputStream, contentPath);
+                    serverLog("Connected from: " + socket.getInetAddress());
                     requestHandler.handle();
                 } catch (SocketException e) {
                     serverLog("client closed connection");
                 } catch (SocketTimeoutException e) {
-                    serverLog("No client connected. Checking if must stop and starting new wait.");
+//                    serverLog("No client connected. Checking if must stop and starting new wait.");
                 }
             }
         } catch (IOException e) {
