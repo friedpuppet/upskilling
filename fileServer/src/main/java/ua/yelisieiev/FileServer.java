@@ -83,7 +83,7 @@ public class FileServer {
 
     private void checkNotStarted() {
         if (started) {
-            throw new RuntimeException("Server is already started.");
+            throw new RuntimeException("Server is already started");
         }
     }
 }
