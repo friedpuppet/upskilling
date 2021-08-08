@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+
+    <title>Products</title>
+</head>
+<body>
+<div class="container">
+<h1>Available products</h1>
+<table class="table table-info">
+    <tr class="table-primary"><th>id</th><th>name</th><th>price</th><th>action</th></tr>
+    <#list products as product>
+    <tr>
+    <td>${product.id}</td>
+    <td>${product.name}</td>
+    <td>${product.price?string.computer}</td>
+    <td>
+        <form action="/product" method="GET"><input type="hidden" name="id" value="${product.id}" /><button type="submit" class="btn btn-secondary">Edit</button></form>
+        <form action="/product" method="POST"><input type="hidden" name="id" value="${product.id}" /><input type="hidden" name="_method" value="DELETE" /><button type="submit" class="btn btn-danger">Delete</button></form>
+    </td>
+    </tr>
+<!--    <tr><td>${product.id}</td><td>${product.name}</td><td>${product.price}</td><td><form id="edit" action="/product" method="GET"><input type="submit" value="Edit"></form></td></tr>-->
+<!--    <tr><td>${product.id}</td><td>${product.name}</td><td>${product.price}</td><td><form id="edit" action="/product" method="GET"><input type="submit" value="Edit"></form></td></tr>-->
+    </#list>
+</table>
+    <form action="/product">
+        <button type="submit" class="btn btn-primary">Add</button>
+    </form>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+</body>
+</html>

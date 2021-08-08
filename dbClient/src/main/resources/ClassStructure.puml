@@ -1,0 +1,84 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class Client {
+- dbConnector : Connection
+- config : Config
+- textRepGen : TextTableGenerator
+- htmlRepGen : HtmlTableGenerator
++ main() : void {static}
+- loadConfig() : Config
+- dialog() : void
+- parseInput() : Command
+- writeResultSetConsole(Resultset) : void
+- writeResultSetFile(Resultset, File) : void
+}
+Client::config *-- Config
+Client::textRepGen *-- TextTableGenerator
+Client::htmlRepGen *-- HtmlTableGenerator
+
+Client *-- Command
+
+abstract class Command {
+- dbConnector : Connection
++ type : CommandType
++ text : String
++ execute() : Object
+}
+Command::CommandType --> CommandType
+
+enum CommandType {
+SEL
+DML
+}
+
+class SELCommand extends Command {
++ execute() : ResultSet
+}
+
+class DMLCommand extends Command {
++ execute() : Integer
+}
+
+
+
+class Config {
+  - Map<String, String> params
+  - loadConfig()
+  + String getParam()
+}
+
+interface ReportGenerator {
++ generate(ResultSet, PrintStream) : void {static}
+}
+
+class TextTableGenerator implements ReportGenerator
+
+class HtmlTableGenerator implements ReportGenerator
+
+
+
+'abstract class AbstractList
+'abstract AbstractCollection
+'interface List
+'interface Collection
+'
+'List <|-- AbstractList
+'Collection <|-- AbstractCollection
+'
+'Collection <|- List
+'AbstractCollection <|- AbstractList
+'AbstractList <|-- ArrayList
+'
+'class ArrayList {
+'Object[] elementData
+'size()
+'}
+'
+'enum TimeUnit {
+'DAYS
+'HOURS
+'MINUTES
+'}
+
+@enduml
