@@ -2,23 +2,25 @@ package ua.yelisieiev.web.servlet;
 
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateNotFoundException;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import ua.yelisieiev.service.ProductServiceException;
 import ua.yelisieiev.service.ProductsService;
 import ua.yelisieiev.entity.Product;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.*;
 
-import ua.yelisieiev.web.PageGenerator;
+import ua.yelisieiev.web.PageWriter;
 
-import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+import static jakarta.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 
 public class ProductsServlet extends HttpServlet {
     private final ProductsService productsService;
+    private final PageWriter pageWriter = new PageWriter();
+
 
     public ProductsServlet(ProductsService productsService) {
         this.productsService = productsService;
@@ -30,8 +32,9 @@ public class ProductsServlet extends HttpServlet {
 
         try {
             List<Product> products = productsService.getAll();
-
-            PageGenerator.generateProductsPage(products, writer);
+            Map<String, Object> pageData = new HashMap<>();
+            pageData.put("products", products);
+            pageWriter.writePage("/products.html", pageData, writer);
         } catch (TemplateNotFoundException e) {
             resp.sendError(SC_INTERNAL_SERVER_ERROR, "Template not found: " + e.getMessage());
         } catch (TemplateException e) {

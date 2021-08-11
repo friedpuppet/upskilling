@@ -1,19 +1,17 @@
 package ua.yelisieiev.service;
 
+import org.flywaydb.core.Flyway;
+import org.flywaydb.core.api.configuration.FluentConfiguration;
+import org.h2.jdbcx.JdbcDataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ua.yelisieiev.entity.Product;
-import ua.yelisieiev.persistence.jdbc.JdbcConnector;
-import ua.yelisieiev.persistence.jdbc.JdbcPersistence;
-import ua.yelisieiev.persistence.Persistence;
+import ua.yelisieiev.persistence.jdbc.JdbcProductPersistence;
+import ua.yelisieiev.persistence.ProductPersistence;
 import ua.yelisieiev.persistence.PersistenceException;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,22 +21,19 @@ public class ProductsServiceTest {
 
     @BeforeEach
     private void createService() throws PersistenceException, SQLException {
-        Properties properties = new Properties();
-        properties.setProperty("DB_URL", "jdbc:h2:./testdb");
-        properties.setProperty("DB_LOGIN", "root");
-        properties.setProperty("DB_PASSWORD", "GOD");
+        JdbcDataSource h2DataSource = new JdbcDataSource();
+        h2DataSource.setURL("jdbc:h2:mem:testdb;DB_CLOSE_ON_EXIT=FALSE");
+        h2DataSource.setUser("root");
+        h2DataSource.setPassword("GOD");
+        h2DataSource.getConnection().createStatement().execute("DROP ALL OBJECTS");
 
-        Connection connection = DriverManager.getConnection(properties.getProperty("DB_URL"),
-                properties.getProperty("DB_LOGIN"),
-                properties.getProperty("DB_PASSWORD"));
-        Statement statement = connection.createStatement();
-        statement.execute("drop all objects");
-        statement.execute("create table products (id int, name varchar(200), price number)");
-        statement.close();
-        connection.close();
+        FluentConfiguration configure = Flyway.configure();
+        configure.dataSource("jdbc:h2:mem:testdb;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1", "root", "GOD");
+        Flyway flyway = configure.load();
+        flyway.migrate();
 
-        Persistence persistence = new JdbcPersistence(new JdbcConnector(properties));
-        productsService = new ProductsService(persistence);
+        ProductPersistence productPersistence = new JdbcProductPersistence(h2DataSource);
+        productsService = new ProductsService(productPersistence);
     }
 
     @DisplayName("With empty persistence - add a product - and check if the service returns it")

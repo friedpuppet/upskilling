@@ -1,16 +1,16 @@
 package ua.yelisieiev.service;
 
 import ua.yelisieiev.entity.Product;
-import ua.yelisieiev.persistence.Persistence;
+import ua.yelisieiev.persistence.ProductPersistence;
 import ua.yelisieiev.persistence.PersistenceException;
 
 import java.util.List;
 
 public class ProductsService {
-    private final Persistence persistence;
+    private final ProductPersistence productPersistence;
 
-    public ProductsService(Persistence persistence) {
-        this.persistence = persistence;
+    public ProductsService(ProductPersistence productPersistence) {
+        this.productPersistence = productPersistence;
     }
 
     /**
@@ -20,7 +20,7 @@ public class ProductsService {
      */
     public List<Product> getAll() throws ProductServiceException {
         try {
-            return persistence.getAll();
+            return productPersistence.getAll();
         } catch (PersistenceException e) {
             throw new ProductServiceException(e);
         }
@@ -28,7 +28,7 @@ public class ProductsService {
 
     public void add(Product product) throws ProductServiceException {
         try {
-            persistence.add(product);
+            productPersistence.add(product);
         } catch (PersistenceException e) {
             throw new ProductServiceException(e);
         }
@@ -36,7 +36,7 @@ public class ProductsService {
 
     public Product get(Product.Id productId) throws ProductServiceException {
         try {
-            return persistence.get(productId);
+            return productPersistence.get(productId);
         } catch (PersistenceException e) {
             throw new ProductServiceException(e);
         }
@@ -44,7 +44,7 @@ public class ProductsService {
 
     public void delete(Product.Id id) throws ProductServiceException {
         try {
-            persistence.delete(id);
+            productPersistence.delete(id);
         } catch (PersistenceException e) {
             throw new ProductServiceException(e);
         }
@@ -52,7 +52,7 @@ public class ProductsService {
 
     public void update(Product updatedProduct) throws ProductServiceException {
         try {
-            persistence.update(updatedProduct);
+            productPersistence.update(updatedProduct);
         } catch (PersistenceException e) {
             throw new ProductServiceException(e);
         }

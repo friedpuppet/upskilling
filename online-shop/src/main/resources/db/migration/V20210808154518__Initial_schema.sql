@@ -1,1 +1,2 @@
-create table products (id int, name varchar(200), price number)
+create schema onlineshop;
+create table onlineshop.products (id int, name varchar(200), price numeric);

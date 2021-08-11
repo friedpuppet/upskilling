@@ -2,23 +2,26 @@ package ua.yelisieiev.web.servlet;
 
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateNotFoundException;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import ua.yelisieiev.entity.Product;
 import ua.yelisieiev.service.ProductServiceException;
 import ua.yelisieiev.service.ProductsService;
-import ua.yelisieiev.web.PageGenerator;
+import ua.yelisieiev.web.PageWriter;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.HashMap;
+import java.util.Map;
 
-import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
-import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+import static jakarta.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
+import static jakarta.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 
 public class ProductServlet extends HttpServlet {
     private final ProductsService productsService;
+    private final PageWriter pageWriter = new PageWriter();
 
     public ProductServlet(ProductsService productsService) {
         this.productsService = productsService;
@@ -32,14 +35,16 @@ public class ProductServlet extends HttpServlet {
         Writer writer = resp.getWriter();
         try {
             if (stringId == null) {
-                PageGenerator.generateNewProductPage(writer);
+                pageWriter.writePage("/new_product.html", null, writer);
             } else {
                 productId = new Product.Id(Integer.parseInt(stringId));
                 Product product = productsService.get(productId);
                 if (product == null) {
                     throw new ServletException("No product with id " + productId);
                 }
-                PageGenerator.generateProductEditPage(product, writer);
+                Map<String, Object> pageData = new HashMap<>();
+                pageData.put("product", product);
+                pageWriter.writePage("/edit_product.html", pageData, writer);
             }
         } catch (TemplateNotFoundException e) {
             resp.sendError(SC_INTERNAL_SERVER_ERROR, "Template not found: " + e.getMessage());

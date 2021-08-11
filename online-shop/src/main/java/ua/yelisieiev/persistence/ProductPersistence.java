@@ -4,7 +4,7 @@ import ua.yelisieiev.entity.Product;
 
 import java.util.List;
 
-public interface Persistence {
+public interface ProductPersistence {
     List<Product> getAll() throws PersistenceException;
 
     void add(Product product) throws PersistenceException;
