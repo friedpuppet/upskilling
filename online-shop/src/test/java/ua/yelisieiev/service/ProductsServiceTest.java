@@ -6,6 +6,7 @@ import org.h2.jdbcx.JdbcDataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.postgresql.ds.PGSimpleDataSource;
 import ua.yelisieiev.entity.Product;
 import ua.yelisieiev.persistence.jdbc.JdbcProductPersistence;
 import ua.yelisieiev.persistence.ProductPersistence;
@@ -21,18 +22,22 @@ public class ProductsServiceTest {
 
     @BeforeEach
     private void createService() throws PersistenceException, SQLException {
-        JdbcDataSource h2DataSource = new JdbcDataSource();
-        h2DataSource.setURL("jdbc:h2:mem:testdb;DB_CLOSE_ON_EXIT=FALSE");
-        h2DataSource.setUser("root");
-        h2DataSource.setPassword("GOD");
-        h2DataSource.getConnection().createStatement().execute("DROP ALL OBJECTS");
+        PGSimpleDataSource dataSource = new PGSimpleDataSource();
+        String[] bdServers = {"instances.spawn.cc"};
+        dataSource.setServerNames(bdServers);
+        int[] bdPorts = {32213};
+        dataSource.setPortNumbers(bdPorts);
+        dataSource.setDatabaseName("foobardb");
+        dataSource.setUser("spawn_admin_uBsj");
+        dataSource.setPassword("a7r6UIwxa34eY0n5");
 
         FluentConfiguration configure = Flyway.configure();
-        configure.dataSource("jdbc:h2:mem:testdb;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1", "root", "GOD");
-        Flyway flyway = configure.load();
+        configure.dataSource(dataSource);
+        Flyway flyway = configure.schemas("onlineshop").load();
+        flyway.clean();
         flyway.migrate();
 
-        ProductPersistence productPersistence = new JdbcProductPersistence(h2DataSource);
+        ProductPersistence productPersistence = new JdbcProductPersistence(dataSource);
         productsService = new ProductsService(productPersistence);
     }
 

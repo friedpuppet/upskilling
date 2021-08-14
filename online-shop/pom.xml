@@ -24,6 +24,19 @@
             <artifactId>jetty-webapp</artifactId>
             <version>11.0.6</version>
         </dependency>
+        <dependency>
+            <groupId>com.tersesystems.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.30</version>
+        </dependency>
+
 
         <dependency>
             <groupId>org.freemarker</groupId>
@@ -39,6 +52,12 @@
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>1.4.200</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.zonky.test</groupId>
+            <artifactId>embedded-postgres</artifactId>
+            <version>1.2.10</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -78,6 +97,7 @@
                     <url>jdbc:postgresql://instances.spawn.cc:32090/foobardb</url>
                     <user>spawn_admin_uBsj</user>
                     <password>4AXKnwjUxnEzFuMa</password>
+                    <schemas>onlineshop</schemas>
                 </configuration>
 
                 <dependencies>
