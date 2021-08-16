@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * server responds with echo
  **/
 
-public abstract class AbstractEchoServerTest {
+public abstract class UniversalEchoServerTest {
     private final EchoServer server = getServer();
     private static final int SERVER_PORT = 3000;
 
@@ -68,11 +68,11 @@ public abstract class AbstractEchoServerTest {
     }
 
     @Test
-    @DisplayName("Start server and wait for 60 seconds")
+    @DisplayName("Start server and wait for 5 seconds")
     public void test_serverStartAndWait() {
         startServer();
         try {
-            Thread.sleep(60000);
+            Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

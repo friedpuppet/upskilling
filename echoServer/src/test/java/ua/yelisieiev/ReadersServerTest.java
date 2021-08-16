@@ -1,8 +1,8 @@
 package ua.yelisieiev;
 
-public class ReadersServerTest extends AbstractEchoServerTest {
+public class ReadersServerTest extends UniversalEchoServerTest {
     @Override
     EchoServer getServer() {
-        return new ReadersEchoServer();
+        return new UniversalEchoServer(new ReadersEchoClientHandler());
     }
 }

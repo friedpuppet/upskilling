@@ -1,8 +1,8 @@
 package ua.yelisieiev;
 
-public class StreamsServerTest extends AbstractEchoServerTest{
+public class StreamsServerTest extends UniversalEchoServerTest {
     @Override
     EchoServer getServer() {
-        return new StreamsEchoServer();
+        return new UniversalEchoServer(new StreamsEchoClientHandler());
     }
 }
