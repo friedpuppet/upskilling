@@ -1,1 +1,1 @@
-create table onlineshop.products (id int, name varchar(200), price numeric);
+CREATE TABLE onlineshop.products (id SERIAL PRIMARY KEY, name VARCHAR(200), price NUMERIC);

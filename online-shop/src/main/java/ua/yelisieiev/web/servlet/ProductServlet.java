@@ -39,7 +39,9 @@ public class ProductServlet extends HttpServlet {
         Writer writer = resp.getWriter();
         try {
             if (stringId == null) {
+                // add new
                 pageWriter.writePage("/new_product.html", null, writer);
+                // edit
             } else {
                 productId = new Product.Id(Integer.parseInt(stringId));
                 Product product = productsService.get(productId);
@@ -121,12 +123,13 @@ public class ProductServlet extends HttpServlet {
         if (name == null) {
             throw new ServletException("Name is empty");
         }
+        String description = req.getParameter("description");
         String priceString = req.getParameter("price");
         if (priceString == null) {
             throw new ServletException("Price is empty");
         }
         double price = Double.parseDouble(priceString);
-        Product product = new Product(name, price);
+        Product product = new Product(name, price, description);
         return product;
     }
 

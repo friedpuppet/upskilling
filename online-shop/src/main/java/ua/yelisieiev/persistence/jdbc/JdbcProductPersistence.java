@@ -35,15 +35,39 @@ public class JdbcProductPersistence implements ProductPersistence {
     }
 
     @Override
+    public List<Product> getAllFiltered(String searchExpression) throws PersistenceException {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement getAllFilteredStatement = getGetAllFilteredStatement(connection)) {
+            getAllFilteredStatement.setString(1, "%" + searchExpression + "%");
+            getAllFilteredStatement.setString(2, "%" + searchExpression + "%");
+            getAllFilteredStatement.execute();
+            try (ResultSet resultSet = getAllFilteredStatement.getResultSet()) {
+                LinkedList<Product> products = new LinkedList<>();
+                while (resultSet.next()) {
+                    Product product = getProductFromResultSetRow(resultSet);
+                    products.add(product);
+                }
+                return products;
+            }
+        } catch (SQLException e) {
+            throw new PersistenceException("Unable to get products", e);
+        }
+    }
+
+    @Override
     synchronized public void add(Product product) throws PersistenceException {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement addStatement = getAddStatement(connection)) {
-            int newId = getNewProductId();
-            addStatement.setInt(1, newId);
-            addStatement.setString(2, product.getName());
-            addStatement.setDouble(3, product.getPrice());
+//            addStatement.setInt(1, newId);
+            addStatement.setString(1, product.getName());
+            addStatement.setDouble(2, product.getPrice());
+            addStatement.setString(3, product.getDescription());
             addStatement.executeUpdate();
-            product.setId(new Product.Id(newId));
+            try(ResultSet keySet = addStatement.getGeneratedKeys()) {
+                keySet.next();
+                int newId = keySet.getInt(1);
+                product.setId(new Product.Id(newId));
+            }
         } catch (SQLException e) {
             throw new PersistenceException("Unable to add product " + product, e);
         }
@@ -83,7 +107,8 @@ public class JdbcProductPersistence implements ProductPersistence {
              PreparedStatement updateStatement = getUpdateStatement(connection)) {
             updateStatement.setString(1, updatedProduct.getName());
             updateStatement.setDouble(2, updatedProduct.getPrice());
-            updateStatement.setInt(3, updatedProduct.getId().getValue());
+            updateStatement.setString(3, updatedProduct.getDescription());
+            updateStatement.setInt(4, updatedProduct.getId().getValue());
             updateStatement.executeUpdate();
             if (updateStatement.getUpdateCount() == 0) {
                 throw new PersistenceException("No product to update");
@@ -93,41 +118,25 @@ public class JdbcProductPersistence implements ProductPersistence {
         }
     }
 
-
-    private int getNewProductId() throws SQLException {
-        int newId;
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement newIdStatement = getNewIdStatement(connection)) {
-            newIdStatement.execute();
-            try (ResultSet resultSet = newIdStatement.getResultSet()) {
-                if (resultSet.next()) {
-                    newId = resultSet.getInt(1);
-                } else {
-                    newId = 1;
-                }
-            }
-        }
-        return newId;
-    }
-
-    private PreparedStatement getNewIdStatement(Connection connection) throws SQLException {
-        String NEWID_SQL = "select max(id) + 1 as new_id  from onlineshop.products";
-        return connection.prepareStatement(NEWID_SQL);
-    }
-
     private PreparedStatement getAddStatement(Connection connection) throws SQLException {
-        String ADD_SQL = "insert into onlineshop.products(id, name, price) values (?, ?, ?)";
-        return connection.prepareStatement(ADD_SQL);
+        String ADD_SQL = "insert into onlineshop.products(name, price, description, modify_date) values (?, ?, ?, current_timestamp)";
+        return connection.prepareStatement(ADD_SQL, Statement.RETURN_GENERATED_KEYS);
     }
 
     private PreparedStatement getGetAllStatement(Connection connection) throws SQLException {
         // being straightforward here; no reflection-autogeneration
-        String GETALL_SQL = "select id, name, price from onlineshop.products";
+        String GETALL_SQL = "select id, name, price, description, modify_date from onlineshop.products";
+        return connection.prepareStatement(GETALL_SQL);
+    }
+
+    private PreparedStatement getGetAllFilteredStatement(Connection connection) throws SQLException {
+        String GETALL_SQL = "select id, name, price, description, modify_date from onlineshop.products prods" +
+                " WHERE prods.name like ? or prods.description like ?";
         return connection.prepareStatement(GETALL_SQL);
     }
 
     private PreparedStatement getGetStatement(Connection connection) throws SQLException {
-        String GET_SQL = "select id, name, price from onlineshop.products where id = ?";
+        String GET_SQL = "select id, name, price, description, modify_date from onlineshop.products where id = ?";
         return connection.prepareStatement(GET_SQL);
     }
 
@@ -137,13 +146,15 @@ public class JdbcProductPersistence implements ProductPersistence {
     }
 
     private PreparedStatement getUpdateStatement(Connection connection) throws SQLException {
-        String UPDATE_SQL = "update onlineshop.products set name = ?, price = ? where id = ?";
+        String UPDATE_SQL = "update onlineshop.products set name = ?, price = ?, description = ?, modify_date = current_timestamp where id = ?";
         return connection.prepareStatement(UPDATE_SQL);
     }
 
     private Product getProductFromResultSetRow(ResultSet resultSet) throws SQLException {
-        return new Product(new Product.Id(resultSet.getInt(1)),
-                resultSet.getString(2),
-                resultSet.getDouble(3));
+        return new Product(new Product.Id(resultSet.getInt("id")),
+                resultSet.getString("name"),
+                resultSet.getDouble("price"),
+                resultSet.getString("description"),
+                resultSet.getTimestamp("modify_date"));
     }
 }

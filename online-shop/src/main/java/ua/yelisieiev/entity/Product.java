@@ -1,22 +1,44 @@
 package ua.yelisieiev.entity;
 
 import java.text.MessageFormat;
+import java.util.Date;
 import java.util.Objects;
 
 public class Product {
     private Id id;
     private String name;
     private double price;
+    private String description;
+    private Date modifyDate;
 
     public Product(String name, double price) {
         this(null, name, price);
     }
 
     public Product(Id id, String name, double price) {
+        this(id, name, price, null, null);
+    }
+
+    public Product(String name, double price, String description) {
+        this(null, name, price, description, null);
+    }
+
+    public Product(Id id, String name, double price, String description) {
+        this(id, name, price, description, null);
+    }
+
+    public Product(String name, double price, String description, Date modifyDate) {
+        this(null, name, price, description, modifyDate);
+    }
+
+    public Product(Id id, String name, double price, String description, Date modifyDate) {
         this.id = id;
         this.name = name;
         this.price = price;
+        this.description = description;
+        this.modifyDate = modifyDate;
     }
+
 
     public void setId(Id id) {
         this.id = id;
@@ -42,9 +64,25 @@ public class Product {
         return price;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Date getModifyDate() {
+        return modifyDate;
+    }
+
+    public void setModifyDate(Date modifyDate) {
+        this.modifyDate = modifyDate;
+    }
+
     @Override
     public String toString() {
-        return MessageFormat.format("'{'id={0}, name=''{1}'', price={2}'}'", id, name, price);
+        return "Product{id=%s, name='%s', price=%s, description='%s', modifyDate=%s}".formatted(id, name, price, description, modifyDate);
     }
 
     @Override
@@ -52,12 +90,12 @@ public class Product {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return Double.compare(product.price, price) == 0 && Objects.equals(id, product.id) && Objects.equals(name, product.name);
+        return Double.compare(product.price, price) == 0 && id.equals(product.id) && name.equals(product.name) && Objects.equals(description, product.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, price);
+        return Objects.hash(id, name, price, description);
     }
 
     public static class Id {

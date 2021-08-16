@@ -7,6 +7,8 @@ import java.util.List;
 public interface ProductPersistence {
     List<Product> getAll() throws PersistenceException;
 
+    List<Product> getAllFiltered(String searchExpression) throws PersistenceException;
+
     void add(Product product) throws PersistenceException;
 
     Product get(Product.Id productId) throws PersistenceException;

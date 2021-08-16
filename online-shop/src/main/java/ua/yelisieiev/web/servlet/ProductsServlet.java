@@ -31,7 +31,13 @@ public class ProductsServlet extends HttpServlet {
         Writer writer = resp.getWriter();
 
         try {
-            List<Product> products = productsService.getAll();
+            String searchExpression = req.getParameter("search");
+            List<Product> products;
+            if (searchExpression == null) {
+                products = productsService.getAll();
+            } else {
+                products = productsService.getAllFiltered(searchExpression);
+            }
             Map<String, Object> pageData = new HashMap<>();
             pageData.put("products", products);
             pageWriter.writePage("/products.html", pageData, writer);

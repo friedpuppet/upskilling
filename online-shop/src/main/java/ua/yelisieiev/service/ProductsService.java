@@ -13,11 +13,6 @@ public class ProductsService {
         this.productPersistence = productPersistence;
     }
 
-    /**
-     * takes @Product instance with @Product.id == null
-     * creates corresponding object in storage
-     * and fills its @Product.id with a newly generated one
-     */
     public List<Product> getAll() throws ProductServiceException {
         try {
             return productPersistence.getAll();
@@ -26,6 +21,11 @@ public class ProductsService {
         }
     }
 
+    /**
+     * takes @Product instance with @Product.id == null
+     * creates corresponding object in storage
+     * and fills its @Product.id with a newly generated one
+     */
     public void add(Product product) throws ProductServiceException {
         try {
             productPersistence.add(product);
@@ -53,6 +53,14 @@ public class ProductsService {
     public void update(Product updatedProduct) throws ProductServiceException {
         try {
             productPersistence.update(updatedProduct);
+        } catch (PersistenceException e) {
+            throw new ProductServiceException(e);
+        }
+    }
+
+    public List<Product> getAllFiltered(String searchExpression) throws ProductServiceException {
+        try {
+            return productPersistence.getAllFiltered(searchExpression);
         } catch (PersistenceException e) {
             throw new ProductServiceException(e);
         }
