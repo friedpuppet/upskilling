@@ -1,5 +1,8 @@
 package ua.yelisieiev;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -7,9 +10,11 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
 public abstract class AbstractEchoServer implements EchoServer {
+    protected final Logger log = LoggerFactory.getLogger(this.getClass());
     private int port = 8080;
     private boolean started = false;
     boolean mustStop = false;
+    private ControlThread controlThread;
 
     @Override
     public boolean isStarted() {
@@ -22,33 +27,78 @@ public abstract class AbstractEchoServer implements EchoServer {
         this.port = port;
     }
 
+    class ControlThread extends Thread {
+        public ControlThread() {
+            this.setName("Control thread");
+        }
+
+        @Override
+        public void run() {
+            log.info("Control thread started");
+            MainThread mainThread = new MainThread();
+            mainThread.setDaemon(true);
+            mainThread.start();
+            while (!interrupted());
+            log.info("Control thread stopped");
+        }
+    }
+
+    class MainThread extends Thread {
+        public MainThread() {
+            this.setName("Main thread");
+        }
+
+        @Override
+        public void run() {
+            handleRequests();
+        }
+    }
+
+    class RequestThread extends Thread {
+        private final BufferedInputStream inputStream;
+        private final BufferedOutputStream outputStream;
+        private final Socket socket;
+
+        public RequestThread(Socket socket) throws IOException {
+            this.setName("Client thread " + getId());
+
+            this.socket = socket;
+            inputStream = new BufferedInputStream(socket.getInputStream());
+            outputStream = new BufferedOutputStream(socket.getOutputStream());
+        }
+
+        @Override
+        public void run() {
+            try {
+                handleClient(inputStream, outputStream);
+                inputStream.close();
+                outputStream.close();
+                socket.close();
+            } catch (IOException e) {
+                log.error("Client error", e);
+            }
+        }
+    }
+
     @Override
     public void start() {
         checkNotStarted();
-        Runnable mainThread = new Runnable() {
-            @Override
-            public void run() {
-                handleRequests();
-            }
-        };
-        new Thread(mainThread).start();
+        controlThread = new ControlThread();
+        controlThread.start();
     }
 
     private void handleRequests() {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
-            serverSocket.setSoTimeout(5000);
             started = true;
-            serverLog("started");
+            log.info("started");
 
             while (!mustStop) {
-                try (Socket socket = serverSocket.accept();
-                     BufferedInputStream inputStream = new BufferedInputStream(socket.getInputStream());
-                     BufferedOutputStream outputStream = new BufferedOutputStream(socket.getOutputStream())) {
-                    handleClient(inputStream, outputStream);
+                try {
+                    Socket socket = serverSocket.accept();
+                    RequestThread requestThread = new RequestThread(socket);
+                    requestThread.start();
                 } catch (SocketException e) {
-                    serverLog("client closed connection");
-                } catch (SocketTimeoutException e) {
-                    serverLog("No client connected. Checking if must stop and starting new wait.");
+                    log.info("client closed connection");
                 }
             }
         } catch (IOException e) {
@@ -56,7 +106,7 @@ public abstract class AbstractEchoServer implements EchoServer {
         }
         started = false;
         mustStop = false;
-        serverLog("stopped");
+        log.info("stopped");
     }
 
     abstract void handleClient(BufferedInputStream inputStream, BufferedOutputStream outputStream) throws IOException;
@@ -78,14 +128,10 @@ public abstract class AbstractEchoServer implements EchoServer {
         }
     }
 
-
-    void serverLog(String message) {
-        System.out.println("Server: " + message);
-    }
-
     @Override
     public void stop() {
-        serverLog("stopping...");
+        log.info("stopping...");
+        controlThread.interrupt();
         mustStop = true;
     }
 
@@ -96,7 +142,7 @@ public abstract class AbstractEchoServer implements EchoServer {
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
         stop();
     }
 }

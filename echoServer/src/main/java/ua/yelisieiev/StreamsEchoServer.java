@@ -12,13 +12,13 @@ public class StreamsEchoServer extends AbstractEchoServer {
         while (!mustStop) {
             String line = getLine(inputStream);
             if (line == null) {
-                serverLog("client closed connection");
+                log.info("client closed connection");
                 break;
             }
 //                        System.out.println("["  + line + "]");
             if (line.length() > 0) {
-                serverLog("received from client: " + line);
-                serverLog("echo: " + line);
+                log.info("received from client: " + line);
+                log.info("echo: " + line);
                 outputStream.write(("echo: " + line).getBytes());
                 outputStream.write('\n');
                 outputStream.flush();

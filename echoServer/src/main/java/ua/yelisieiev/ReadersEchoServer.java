@@ -11,12 +11,12 @@ public class ReadersEchoServer extends AbstractEchoServer {
         while (!mustStop) {
             String line = reader.readLine();
             if (line == null) {
-                serverLog("client closed connection");
+                log.info("client closed connection");
                 break;
             }
             if (line.length() > 0) {
-                serverLog("received from client: " + line);
-                serverLog("echo: " + line);
+                log.info("received from client: " + line);
+                log.info("echo: " + line);
                 writer.write("echo: " + line);
                 writer.write('\n');
                 writer.flush();
