@@ -7,8 +7,9 @@ interface ApplicationContext {
 }
 
 class ClassPathApplicationContext implements ApplicationContext {
-- File configFile
-- Map<String, Bean> beans
+'- File configFile
+- Map<String, Bean> namesToBeans
+- Map<Class, Bean> classesToBeans
 
 + void ClassPathApplicationContext(String path)
 + Object getBean(String name)
@@ -16,36 +17,33 @@ class ClassPathApplicationContext implements ApplicationContext {
 }
 
 ClassPathApplicationContext *-- Bean
-ClassPathApplicationContext --> ConfigLoader
+ConfigLoader --> Bean
+BeanCreator --> Bean
+ClassPathApplicationContext -> ConfigLoader
 ClassPathApplicationContext --> BeanCreator
 
 class ConfigLoader {
-- Map<String, BeanConfig> beanConfigs;
-- Map<String, BeanConfig> readConfig(String path) {static}
-+ BeanConfig getBeanConfig(String beanName)
+'+ Map<String, BeanConfig> beanConfigs;
+- List<Bean> readConfig(InputStream) {static}
+'+ BeanConfig getBeanConfig(String beanName)
 }
 
-ConfigLoader *-- BeanConfig
+'ConfigLoader *-- BeanConfig
 
-class BeanConfig {
-- String beanName
-- String className
-- Map<String, String> properties
-- Map<String, String> dependencies
-}
 
 class BeanCreator {
-+ Bean createBean(BeanConfig) {static}
-+ void fillProperties(BeanConfig, Bean) {static}
-+ void injectDependencies(BeanConfig, Bean) {static}
-+ Object instantiate(String beanName) {static}
++ instantiate(Bean) {static}
+- void fillProperties(Bean) {static}
+- void injectDependencies(Bean) {static}
 }
 
 
 class Bean {
-- String beanName
-- String className
-- Object instance
++ String beanName
++ String className
++ Map<String, String> properties
++ Map<String, String> dependencies
++ Object instance
 }
 
 
