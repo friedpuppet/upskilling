@@ -5,28 +5,28 @@ import freemarker.template.TemplateNotFoundException;
 import ua.yelisieiev.entity.Product;
 import ua.yelisieiev.service.ProductServiceException;
 import ua.yelisieiev.service.ProductsService;
+import ua.yelisieiev.service.ServiceLocator;
 import ua.yelisieiev.web.PageWriter;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
-import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
-import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+import static jakarta.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
+import static jakarta.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 
 public class ProductServlet extends HttpServlet {
     private final ProductsService productsService;
     private final PageWriter pageWriter = new PageWriter();
 
-    public ProductServlet(ProductsService productsService) {
-        this.productsService = productsService;
+    public ProductServlet() {
+        productsService = ServiceLocator.getService(ProductsService.class);
     }
-
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {

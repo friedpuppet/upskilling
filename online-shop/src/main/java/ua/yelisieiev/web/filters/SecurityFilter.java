@@ -4,20 +4,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ua.yelisieiev.service.SecurityService;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpFilter;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpFilter;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import ua.yelisieiev.service.ServiceLocator;
+
 import java.io.IOException;
 
 public class SecurityFilter extends HttpFilter {
     public final Logger log = LoggerFactory.getLogger(this.getClass());
     private final SecurityService securityService;
 
-    public SecurityFilter(SecurityService securityService) {
-        this.securityService = securityService;
+    public SecurityFilter() {
+        securityService = ServiceLocator.getService(SecurityService.class);
     }
 
     @Override

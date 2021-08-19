@@ -4,18 +4,20 @@ import freemarker.template.TemplateException;
 import freemarker.template.TemplateNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ua.yelisieiev.service.ProductsService;
 import ua.yelisieiev.service.SecurityService;
+import ua.yelisieiev.service.ServiceLocator;
 import ua.yelisieiev.web.PageWriter;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Writer;
 
-import static javax.servlet.http.HttpServletResponse.*;
+import static jakarta.servlet.http.HttpServletResponse.*;
 
 public class LoginServlet extends HttpServlet {
     public final Logger log = LoggerFactory.getLogger(this.getClass());
@@ -23,8 +25,8 @@ public class LoginServlet extends HttpServlet {
     private final SecurityService securityService;
     private final PageWriter pageWriter = new PageWriter();
 
-    public LoginServlet(SecurityService securityService) {
-        this.securityService = securityService;
+    public LoginServlet() {
+        securityService = ServiceLocator.getService(SecurityService.class);
     }
 
     @Override

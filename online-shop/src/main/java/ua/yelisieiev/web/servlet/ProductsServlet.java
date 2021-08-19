@@ -8,17 +8,17 @@ import ua.yelisieiev.service.ProductsService;
 import ua.yelisieiev.service.ServiceLocator;
 import ua.yelisieiev.web.PageWriter;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+import static jakarta.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 
 public class ProductsServlet extends HttpServlet {
     private final ProductsService productsService;
@@ -26,10 +26,6 @@ public class ProductsServlet extends HttpServlet {
 
     public ProductsServlet() {
         productsService = ServiceLocator.getService(ProductsService.class);
-    }
-
-    public ProductsServlet(ProductsService productsService) {
-        this.productsService = productsService;
     }
 
     @Override

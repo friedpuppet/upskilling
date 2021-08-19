@@ -4,7 +4,6 @@ import org.postgresql.ds.PGSimpleDataSource;
 import ua.yelisieiev.persistence.PersistenceException;
 import ua.yelisieiev.persistence.ProductPersistence;
 import ua.yelisieiev.persistence.jdbc.JdbcProductPersistence;
-import ua.yelisieiev.service.ProductsService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,8 +12,7 @@ public class ServiceLocator {
     private static final Map<Class<?>, Object> SERVICES = new HashMap<>();
 
     static {
-
-//        // todo read this from a file
+        // todo read this from a file
         PGSimpleDataSource dataSource = new PGSimpleDataSource();
         String[] bdServers = {"instances.spawn.cc"};
         dataSource.setServerNames(bdServers);
@@ -31,10 +29,10 @@ public class ServiceLocator {
             throw new RuntimeException(e);
         }
         ProductsService productsService = new ProductsService(productPersistence);
-//        SecurityService securityService = new SecurityService(dataSource);
-
-
         addService(ProductsService.class, productsService);
+
+        SecurityService securityService = new SecurityService(dataSource);
+        addService(SecurityService.class, securityService);
     }
 
     public static <T> T getService(Class<T> serviceType) {
