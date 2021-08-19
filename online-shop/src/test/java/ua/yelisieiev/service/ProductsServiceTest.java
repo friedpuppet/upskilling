@@ -2,15 +2,14 @@ package ua.yelisieiev.service;
 
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.configuration.FluentConfiguration;
-import org.h2.jdbcx.JdbcDataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.postgresql.ds.PGSimpleDataSource;
 import ua.yelisieiev.entity.Product;
-import ua.yelisieiev.persistence.jdbc.JdbcProductPersistence;
-import ua.yelisieiev.persistence.ProductPersistence;
 import ua.yelisieiev.persistence.PersistenceException;
+import ua.yelisieiev.persistence.ProductPersistence;
+import ua.yelisieiev.persistence.jdbc.JdbcProductPersistence;
 
 import java.sql.SQLException;
 

@@ -2,26 +2,22 @@ package ua.yelisieiev.web.servlet;
 
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateNotFoundException;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import ua.yelisieiev.entity.Product;
 import ua.yelisieiev.service.ProductServiceException;
 import ua.yelisieiev.service.ProductsService;
-import ua.yelisieiev.service.SecurityService;
 import ua.yelisieiev.web.PageWriter;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-import static jakarta.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
-import static jakarta.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
+import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 
 public class ProductServlet extends HttpServlet {
     private final ProductsService productsService;

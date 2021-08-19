@@ -1,17 +1,11 @@
 package ua.yelisieiev.service;
 
-import io.zonky.test.db.postgres.embedded.FlywayPreparer;
-import io.zonky.test.db.postgres.junit5.EmbeddedPostgresExtension;
-import io.zonky.test.db.postgres.junit5.PreparedDbExtension;
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.configuration.FluentConfiguration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.postgresql.ds.PGSimpleDataSource;
-
-import javax.sql.DataSource;
 
 import java.sql.Connection;
 import java.sql.SQLException;

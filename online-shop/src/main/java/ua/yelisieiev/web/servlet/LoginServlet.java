@@ -2,28 +2,20 @@ package ua.yelisieiev.web.servlet;
 
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateNotFoundException;
-import jakarta.servlet.Servlet;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import org.eclipse.jetty.servlet.Source;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ua.yelisieiev.entity.Product;
-import ua.yelisieiev.service.ProductServiceException;
 import ua.yelisieiev.service.SecurityService;
 import ua.yelisieiev.web.PageWriter;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Writer;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-import static jakarta.servlet.http.HttpServletResponse.*;
+import static javax.servlet.http.HttpServletResponse.*;
 
 public class LoginServlet extends HttpServlet {
     public final Logger log = LoggerFactory.getLogger(this.getClass());

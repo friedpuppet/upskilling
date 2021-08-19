@@ -2,7 +2,6 @@ package ua.yelisieiev.persistence.jdbc;
 
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.configuration.FluentConfiguration;
-import org.h2.jdbcx.JdbcDataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.postgresql.ds.PGSimpleDataSource;
 import ua.yelisieiev.persistence.PersistenceException;
