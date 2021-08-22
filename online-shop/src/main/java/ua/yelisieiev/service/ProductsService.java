@@ -7,7 +7,12 @@ import ua.yelisieiev.persistence.PersistenceException;
 import java.util.List;
 
 public class ProductsService {
-    private final ProductPersistence productPersistence;
+
+    public void setProductPersistence(ProductPersistence productPersistence) {
+        this.productPersistence = productPersistence;
+    }
+
+    private ProductPersistence productPersistence;
 
     public ProductsService(ProductPersistence productPersistence) {
         this.productPersistence = productPersistence;

@@ -1,15 +1,15 @@
-package ua.yelisieiev.web.filters;
+package ua.yelisieiev.web.filter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ua.yelisieiev.service.SecurityService;
 
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpFilter;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpFilter;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import ua.yelisieiev.service.ServiceLocator;
 
 import java.io.IOException;

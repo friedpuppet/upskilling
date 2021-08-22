@@ -13,7 +13,7 @@
 </head>
 <body>
 <div class="container">
-    <form class="d-flex">
+    <form class="d-flex" action="/products">
         <input class="form-control me-2" name="search" type="search" placeholder="Search" aria-label="Search">
         <button class="btn btn-outline-success" type="submit">Search</button>
     </form>
@@ -37,19 +37,17 @@
             <td>${product.price?string.computer}</td>
             <td>${(product.modifyDate?string["dd.MM.yyyy, HH:mm"])!""}</td>
             <td>
-                <a href="/product?id=${product.id}">
+                <a href="/product/${product.id}/edit">
                     <button class="btn btn-secondary">Edit</button>
                 </a>
-                <form action="/product" method="POST">
-                    <input type="hidden" name="id" value="${product.id}"/>
-                    <input type="hidden" name="_method" value="DELETE"/>
+                <form action="/product/${product.id}/delete" method="POST">
                     <button class="btn btn-danger">Delete</button>
                 </form>
             </td>
         </tr>
     </#list>
     </table>
-    <form action="/product">
+    <form action="/product/new">
         <button type="submit" class="btn btn-primary">Add</button>
     </form>
 </div>

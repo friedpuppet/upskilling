@@ -22,10 +22,9 @@
     </ul>
 
     <h1>Edit product</h1>
-    <form action="/product" method="POST">
-        <input hidden type="text" name="id" value="${product.id}"/>
+    <form action="/product/${product.id}/edit" method="POST">
         Name: <input class="form-control"  type="text" name="name" value="${product.name}"/>
-        Description: <input class="form-control" type="text" name="description" value="${product.description!""}"/>
+        Description: <input class="form-control" type="text" name="description" value="${product.description!}"/>
         Price: <input class="form-control"  type="text" name="price" value="${product.price?string.computer}"/>
         <input type="hidden" name="_method" value="PUT">
         <button class="btn btn-success">Save</button>

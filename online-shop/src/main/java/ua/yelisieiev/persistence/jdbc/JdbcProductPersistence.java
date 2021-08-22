@@ -10,7 +10,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class JdbcProductPersistence implements ProductPersistence {
-    private final DataSource dataSource;
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    private DataSource dataSource;
 
     public JdbcProductPersistence(DataSource dataSource) throws PersistenceException {
         this.dataSource = dataSource;

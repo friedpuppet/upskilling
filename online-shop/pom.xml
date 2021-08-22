@@ -17,18 +17,66 @@
     </properties>
     <packaging>war</packaging>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>7.12.0</version>
+                <configuration>
+                    <url>jdbc:postgresql://instances.spawn.cc:32090/foobardb</url>
+                    <user>spawn_admin_uBsj</user>
+                    <password>4AXKnwjUxnEzFuMa</password>
+                    <schemas>onlineshop</schemas>
+                </configuration>
+
+                <dependencies>
+                    <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
+                    <dependency>
+                        <groupId>org.postgresql</groupId>
+                        <artifactId>postgresql</artifactId>
+                        <version>42.2.23</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
+                <!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-maven-plugin -->
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>9.4.43.v20210629</version>
+            </plugin>
+        </plugins>
+    </build>
+
     <dependencies>
         <dependency>
-            <groupId>jakarta.servlet</groupId>
-            <artifactId>jakarta.servlet-api</artifactId>
-            <version>5.0.0</version>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>5.3.9</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <version>5.3.9</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>4.0.1</version>
             <scope>provided</scope>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>jakarta.servlet</groupId>-->
+<!--            <artifactId>jakarta.servlet-api</artifactId>-->
+<!--            <version>5.0.0</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>com.tersesystems.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>1.0.1</version>
-            <scope>provided</scope>
+<!--            <scope>provided</scope>-->
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -73,37 +121,6 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.flywaydb</groupId>
-                <artifactId>flyway-maven-plugin</artifactId>
-                <version>7.12.0</version>
-                <configuration>
-                    <url>jdbc:postgresql://instances.spawn.cc:32090/foobardb</url>
-                    <user>spawn_admin_uBsj</user>
-                    <password>4AXKnwjUxnEzFuMa</password>
-                    <schemas>onlineshop</schemas>
-                </configuration>
-
-                <dependencies>
-                    <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
-                    <dependency>
-                        <groupId>org.postgresql</groupId>
-                        <artifactId>postgresql</artifactId>
-                        <version>42.2.23</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-            <plugin>
-                <!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-maven-plugin -->
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-maven-plugin</artifactId>
-                <version>11.0.6</version>
-            </plugin>
-        </plugins>
-    </build>
 
 
 </project>
