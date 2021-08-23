@@ -1,23 +1,43 @@
 package ua.yelisieiev.service;
 
+import org.flywaydb.core.Flyway;
+import org.flywaydb.core.api.configuration.FluentConfiguration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.postgresql.ds.PGSimpleDataSource;
 import ua.yelisieiev.entity.Product;
 import ua.yelisieiev.persistence.PersistenceException;
-import ua.yelisieiev.service.mock.ProductPersistenceMock;
+import ua.yelisieiev.persistence.ProductPersistence;
+import ua.yelisieiev.persistence.jdbc.JdbcProductPersistence;
 
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ProductsServiceTest {
+public class ProductsServiceITest {
 
     private ProductsService productsService;
 
     @BeforeEach
     private void createService() throws PersistenceException, SQLException {
-        productsService = new ProductsService(new ProductPersistenceMock());
+        PGSimpleDataSource dataSource = new PGSimpleDataSource();
+        String[] bdServers = {"instances.spawn.cc"};
+        dataSource.setServerNames(bdServers);
+        int[] bdPorts = {32213};
+        dataSource.setPortNumbers(bdPorts);
+        dataSource.setDatabaseName("foobardb");
+        dataSource.setUser("spawn_admin_uBsj");
+        dataSource.setPassword("a7r6UIwxa34eY0n5");
+
+        FluentConfiguration configure = Flyway.configure();
+        configure.dataSource(dataSource);
+        Flyway flyway = configure.schemas("onlineshop").load();
+        flyway.clean();
+        flyway.migrate();
+
+        ProductPersistence productPersistence = new JdbcProductPersistence(dataSource);
+        productsService = new ProductsService(productPersistence);
     }
 
     @DisplayName("With empty persistence - add a product - and check if the service returns it")
