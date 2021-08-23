@@ -24,9 +24,7 @@
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>7.12.0</version>
                 <configuration>
-                    <url>jdbc:postgresql://instances.spawn.cc:32090/foobardb</url>
-                    <user>spawn_admin_uBsj</user>
-                    <password>4AXKnwjUxnEzFuMa</password>
+                    <configFiles>flyway.conf</configFiles>
                     <schemas>onlineshop</schemas>
                 </configuration>
 
